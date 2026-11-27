@@ -29,6 +29,7 @@ import { formatPlayTime, getSteamImageUrl, useSteamRecentGames } from "@/lib/ste
 import { StreamBuilder, useTerminalStream } from "@/lib/terminal-stream";
 import { TideWaves } from "@/components/TideWaves";
 import { ScrollCurveNav } from "@/components/ScrollCurveNav";
+import { DynamicIslandNav } from "@/components/DynamicIslandNav";
 import { CelestialBackdrop } from "@/components/CelestialBackdrop";
 import { RichText, StreamText } from "@/components/RichText";
 
@@ -288,12 +289,12 @@ export function PersonalScrollPage() {
       {/* Gentle 3-layer Morandi tide waves along the bottom edge */}
       <TideWaves primaryColor={accent} secondaryColor={secondaryAccent} dark={dusk} />
 
-      {/* Minimal Top-Right Light/Dark Toggle */}
+      {/* Minimal Top-Right Light/Dark Toggle (Desktop only; mobile integrates it inside the Dynamic Island) */}
       <button
         type="button"
         onClick={handleToggleDusk}
         aria-label={dusk ? "Light" : "Dark"}
-        className="fixed top-5 right-5 z-40 w-8 h-8 rounded-full border-0 flex items-center justify-center cursor-pointer backdrop-blur-md hover:scale-105"
+        className="hidden xl:flex fixed top-5 right-5 z-40 w-8 h-8 rounded-full border-0 items-center justify-center cursor-pointer backdrop-blur-md hover:scale-105"
         style={{
           background: dusk ? "rgba(255,255,255,0.09)" : "rgba(255,254,251,0.82)",
           color: dusk ? accent : accentInk,
@@ -311,38 +312,19 @@ export function PersonalScrollPage() {
         onSelect={jumpToChapter}
       />
 
-      {/* Mobile / Tablet Compact Sticky Top Nav */}
-      <nav
-        aria-label="章节导航"
-        className="xl:hidden sticky top-3 z-30 mx-auto mt-3 w-fit flex items-center gap-1 p-1 rounded-full backdrop-blur-md"
-        style={{
-          background: dusk ? "rgba(20, 22, 32, 0.78)" : "rgba(255, 254, 251, 0.82)",
-          boxShadow: dusk ? "0 8px 24px rgba(0,0,0,0.3)" : "0 8px 24px rgba(72,60,54,0.06)",
-          transition: "background 1.1s ease",
-        }}
-      >
-        {CHAPTERS.map((ch, idx) => {
-          const active = activeIdx === idx;
-          return (
-            <button
-              key={ch.id}
-              type="button"
-              onClick={() => jumpToChapter(idx)}
-              className="border-0 px-3 py-1 rounded-full text-xs cursor-pointer transition-all duration-300"
-              style={{
-                background: active ? `${accent}34` : "transparent",
-                color: active ? accentInk : mutedText,
-                fontWeight: active ? 600 : 500,
-              }}
-            >
-              {ch.label}
-            </button>
-          );
-        })}
-      </nav>
+      {/* Mobile / Tablet Dynamic Island Navigation */}
+      <DynamicIslandNav
+        chapters={CHAPTERS}
+        activeIdx={activeIdx}
+        dusk={dusk}
+        avatarUrl={SITE_CONFIG.profile.avatarUrl}
+        brandName={SITE_CONFIG.profile.name}
+        onSelect={jumpToChapter}
+        onToggleDusk={handleToggleDusk}
+      />
 
       {/* ===== MAIN EDITORIAL READING COLUMN ===== */}
-      <main className="relative z-10 mx-auto max-w-[680px] px-6 sm:px-10 pt-16 xl:pt-24 pb-32 space-y-18 sm:space-y-20">
+      <main className="relative z-10 mx-auto max-w-[680px] px-6 sm:px-10 pt-22 xl:pt-24 pb-32 space-y-18 sm:space-y-20">
         {/* === 01 · 关于 (Live Terminal Typing Stream) === */}
         <section id="about" className="scroll-mt-24 space-y-6">
           <div className="flex items-center gap-4">
