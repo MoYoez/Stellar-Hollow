@@ -1,0 +1,752 @@
+/* ===== Stellar Hollow — Celestial Atmosphere & Floating Stage ===== */
+
+.hollow-root {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: linear-gradient(155deg, #f4efe8 0%, #ebe4db 52%, #e4ddf0 100%);
+}
+
+/* Pure-vector hollow root */
+
+/* Dual cross-fading pastel hollow veils */
+.hollow-veil-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+  transition: opacity var(--duration-bg) var(--ease-out);
+}
+
+.hollow-veil-overlay[data-theme="maple"] {
+  background:
+    radial-gradient(ellipse 68% 58% at 50% 48%, rgba(255, 250, 246, 0.28) 0%, rgba(232, 180, 160, 0.16) 62%, rgba(212, 160, 140, 0.22) 100%);
+}
+.hollow-veil-overlay[data-theme="sunset"] {
+  background:
+    radial-gradient(ellipse 68% 58% at 50% 48%, rgba(255, 249, 251, 0.26) 0%, rgba(212, 165, 181, 0.18) 62%, rgba(190, 138, 160, 0.22) 100%);
+}
+.hollow-veil-overlay[data-theme="sand"] {
+  background:
+    radial-gradient(ellipse 68% 58% at 50% 48%, rgba(255, 252, 245, 0.28) 0%, rgba(229, 212, 184, 0.18) 62%, rgba(206, 186, 152, 0.22) 100%);
+}
+.hollow-veil-overlay[data-theme="forest"] {
+  background:
+    radial-gradient(ellipse 68% 58% at 50% 48%, rgba(250, 253, 249, 0.26) 0%, rgba(168, 196, 160, 0.17) 62%, rgba(138, 172, 132, 0.21) 100%);
+}
+.hollow-veil-overlay[data-theme="stream"] {
+  background:
+    radial-gradient(ellipse 68% 58% at 50% 48%, rgba(248, 252, 254, 0.26) 0%, rgba(168, 200, 212, 0.18) 62%, rgba(136, 174, 192, 0.22) 100%);
+}
+.hollow-veil-overlay[data-theme="bluebell"] {
+  background:
+    radial-gradient(ellipse 68% 58% at 50% 48%, rgba(250, 250, 255, 0.26) 0%, rgba(184, 184, 216, 0.19) 62%, rgba(154, 154, 196, 0.24) 100%);
+}
+.hollow-veil-overlay[data-theme="wisteria"] {
+  background:
+    radial-gradient(ellipse 68% 58% at 50% 48%, rgba(252, 249, 255, 0.26) 0%, rgba(200, 184, 216, 0.19) 62%, rgba(174, 152, 198, 0.24) 100%);
+}
+
+/* Warm-cream mist entrance wake-up */
+.entrance-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 48%, rgba(255, 252, 248, 0.99), rgba(246, 241, 236, 0.98));
+  opacity: 1;
+  transition: opacity 1.45s var(--ease-out);
+}
+.entrance-veil--done {
+  opacity: 0;
+}
+
+/* ===== Main Hollow Stage Layout ===== */
+
+.hollow-stage {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 3vh, 2.25rem) clamp(1rem, 3vw, 2.5rem) clamp(6.75rem, 15vh, 9.25rem);
+}
+
+/* Weightless floating sanctuary container */
+.floating-sanctuary {
+  position: relative;
+  width: min(860px, 88vw);
+  max-height: min(610px, calc(100dvh - 11.5rem));
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(22px) scale(0.96);
+  transition:
+    opacity 0.9s var(--ease-out) 0.25s,
+    transform 1.05s var(--ease-spring) 0.25s;
+}
+
+.hollow-stage--ready .floating-sanctuary {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.floating-sanctuary__levitate {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+  animation: zero-g-float 8.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes zero-g-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Outer luminous hollow eclipse halo behind the floating card */
+.hollow-halo {
+  position: absolute;
+  inset: -26px -34px;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 42px;
+  border: 1px solid rgba(255, 253, 249, 0.62);
+  background: radial-gradient(
+    ellipse 78% 72% at 50% 50%,
+    var(--active-soft) 0%,
+    rgba(255, 253, 249, 0.22) 52%,
+    transparent 76%
+  );
+  transition: background var(--duration-theme-ui) var(--ease-out), border-color var(--duration-theme-ui) var(--ease-out);
+}
+
+.hollow-halo::before {
+  content: "";
+  position: absolute;
+  inset: -14px -20px;
+  border-radius: 52px;
+  border: 1px dashed rgba(180, 168, 160, 0.24);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.15) 65%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.15) 65%, transparent 100%);
+}
+
+/* Top celestial coordinate bar resting above the floating card */
+.celestial-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.75rem 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: rgba(78, 70, 66, 0.68);
+  user-select: none;
+}
+
+.celestial-coord-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: var(--active-pastel);
+  box-shadow: 0 0 10px var(--active-glow);
+  transition: background var(--duration-theme-ui) var(--ease-out), box-shadow var(--duration-theme-ui) var(--ease-out);
+}
+
+/* Main warm paper-glass floating card */
+.hollow-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    180deg,
+    rgba(254, 252, 249, 0.93) 0%,
+    rgba(252, 249, 245, 0.89) 100%
+  );
+  backdrop-filter: blur(18px) saturate(112%);
+  -webkit-backdrop-filter: blur(18px) saturate(112%);
+  border: 1px solid rgba(196, 185, 176, 0.34);
+  box-shadow: var(--shadow-hollow);
+  overflow: hidden;
+  transition: border-color var(--duration-theme-ui) var(--ease-out);
+}
+
+/* Delicate top pastel accent hairline */
+.hollow-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--active-pastel) 50%,
+    transparent 100%
+  );
+  opacity: 0.85;
+  transition: background var(--duration-theme-ui) var(--ease-out);
+  z-index: 2;
+}
+
+.hollow-card__body {
+  padding: 1.75rem 2.125rem 1.875rem;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(180, 170, 160, 0.32) transparent;
+}
+
+.hollow-card__body::-webkit-scrollbar {
+  width: 4px;
+}
+.hollow-card__body::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 12px 0;
+}
+.hollow-card__body::-webkit-scrollbar-thumb {
+  background: rgba(180, 170, 160, 0.38);
+  border-radius: 9999px;
+}
+.hollow-card__body::-webkit-scrollbar-thumb:hover {
+  background: rgba(160, 148, 140, 0.6);
+}
+
+/* Section entrance / drift animations */
+.sector-view {
+  animation: sector-drift-in var(--duration-slide) var(--ease-out) both;
+}
+.sector-view--from-right {
+  animation-name: sector-from-right;
+}
+.sector-view--from-left {
+  animation-name: sector-from-left;
+}
+
+@keyframes sector-drift-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+    filter: blur(2.5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes sector-from-right {
+  0% {
+    opacity: 0;
+    transform: translateX(36px) scale(0.985);
+    filter: blur(2.5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes sector-from-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-36px) scale(0.985);
+    filter: blur(2.5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* ===== Galaxy-Edge Orbital Navigation (Desktop) ===== */
+
+.galaxy-edge-nav {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(0.85rem, 2.6vh, 1.85rem);
+  transform: translateX(-50%);
+  width: min(860px, 92vw);
+  height: 112px;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s var(--ease-out) 0.45s, transform 1s var(--ease-spring) 0.45s;
+}
+
+.hollow-stage--ready ~ .galaxy-edge-nav,
+.galaxy-edge-nav--ready {
+  opacity: 1;
+}
+
+.galaxy-edge-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.orbit-node {
+  position: absolute;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.45s var(--ease-spring);
+}
+
+.orbit-node:hover {
+  transform: translate(-50%, calc(-50% - 7px));
+}
+
+.orbit-node--active {
+  transform: translate(-50%, calc(-50% - 10px));
+}
+
+.orbit-node--active:hover {
+  transform: translate(-50%, calc(-50% - 12px));
+}
+
+.orbit-node__orb-wrap {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tilted Saturn-like galaxy ring around active/hovered planetoid */
+.orbit-node__ring {
+  position: absolute;
+  width: 46px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.25px solid var(--node-color);
+  transform: rotate(-18deg) scale(0.75);
+  opacity: 0;
+  transition:
+    opacity 0.4s var(--ease-out),
+    transform 0.55s var(--ease-spring);
+  pointer-events: none;
+}
+
+.orbit-node:hover .orbit-node__ring {
+  opacity: 0.7;
+  transform: rotate(-18deg) scale(1);
+}
+
+.orbit-node--active .orbit-node__ring {
+  opacity: 0.95;
+  transform: rotate(-16deg) scale(1.14);
+  animation: orbit-ring-breathe 5.5s ease-in-out infinite;
+}
+
+@keyframes orbit-ring-breathe {
+  0%, 100% {
+    transform: rotate(-16deg) scale(1.12);
+  }
+  50% {
+    transform: rotate(-10deg) scale(1.2);
+  }
+}
+
+.orbit-node__orb {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 32% 30%,
+    rgba(255, 255, 255, 0.85) 0%,
+    var(--node-color) 46%,
+    color-mix(in srgb, var(--node-color) 76%, #7c6f6a) 100%
+  );
+  border: 1.5px solid rgba(255, 253, 250, 0.85);
+  box-shadow:
+    0 4px 12px rgba(72, 60, 56, 0.12),
+    0 0 0 0 var(--node-glow);
+  transition:
+    width 0.42s var(--ease-spring),
+    height 0.42s var(--ease-spring),
+    box-shadow 0.45s var(--ease-out);
+}
+
+.orbit-node:hover .orbit-node__orb {
+  width: 26px;
+  height: 26px;
+  box-shadow:
+    0 6px 18px rgba(72, 60, 56, 0.14),
+    0 0 18px 2px var(--node-glow);
+}
+
+.orbit-node--active .orbit-node__orb {
+  width: 30px;
+  height: 30px;
+  box-shadow:
+    0 8px 22px rgba(72, 60, 56, 0.15),
+    0 0 24px 6px var(--node-glow);
+}
+
+.orbit-node__label {
+  padding: 0.14rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: rgba(62, 54, 50, 0.78);
+  background: rgba(254, 252, 249, 0.74);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(196, 185, 176, 0.25);
+  white-space: nowrap;
+  transition:
+    color 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.35s var(--ease-spring),
+    box-shadow 0.35s ease;
+}
+
+.orbit-node:hover .orbit-node__label {
+  color: #2f2a27;
+  background: rgba(255, 253, 250, 0.94);
+}
+
+.orbit-node--active .orbit-node__label {
+  color: #2d2724;
+  font-weight: 600;
+  background: rgba(255, 253, 250, 0.96);
+  border-color: var(--node-color);
+  box-shadow: 0 4px 14px rgba(80, 68, 60, 0.08);
+}
+
+/* ===== Reusable Paradise-Inherited Micro-Components ===== */
+
+.console-pill {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  padding: 0.45rem 0.85rem 0.45rem 0.9rem;
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--active-pastel);
+  background: rgba(58, 52, 48, 0.042);
+  color: var(--active-ink);
+  transition: border-color var(--duration-theme-ui) var(--ease-out), color var(--duration-theme-ui) var(--ease-out);
+}
+
+.console-pill__prompt {
+  color: rgba(60, 52, 48, 0.42);
+  user-select: none;
+  margin-right: 0.2rem;
+}
+
+.console-pill__dot {
+  animation: console-dot-pulse 1.25s ease-in-out infinite;
+}
+.console-pill__dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.console-pill__dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes console-dot-pulse {
+  0%, 60%, 100% { opacity: 0.3; }
+  30% { opacity: 1; }
+}
+
+/* Signature Leaf / Petal Tag */
+.leaf-tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 6.2rem;
+  height: 2.15rem;
+  padding: 0 1.05rem;
+  flex-shrink: 0;
+  cursor: default;
+}
+
+.leaf-tag--with-icon {
+  min-width: 7.2rem;
+}
+
+.leaf-tag__shape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 2px 6px rgba(72, 60, 54, 0.1));
+  transition: filter 0.28s ease, transform 0.35s var(--ease-spring);
+}
+
+.leaf-tag:hover .leaf-tag__shape {
+  filter: drop-shadow(0 4px 10px rgba(72, 60, 54, 0.16));
+  transform: scale(1.03);
+}
+
+.leaf-tag__inner {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.32rem;
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.leaf-tag__icon {
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.3s var(--ease-spring);
+}
+
+.leaf-tag:hover .leaf-tag__icon {
+  transform: scale(1.18) rotate(-6deg);
+}
+
+.leaf-tag__sep {
+  font-size: 0.68em;
+  opacity: 0.8;
+}
+
+.leaf-tag__text {
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(40, 30, 26, 0.14);
+}
+
+.leaf-tag:hover .leaf-tag__text {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Avatar orbital ring spin */
+@keyframes slow-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.avatar-orbit-ring {
+  animation: slow-spin 26s linear infinite;
+}
+
+.vinyl-spin {
+  animation: slow-spin 9s linear infinite;
+}
+
+/* ===== Mobile Responsive ===== */
+
+.mobile-orbit-dock {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .hollow-stage {
+    padding: max(0.85rem, env(safe-area-inset-top)) 0.75rem calc(5.75rem + env(safe-area-inset-bottom));
+    justify-content: center;
+  }
+
+  .floating-sanctuary {
+    width: 94vw;
+    max-height: calc(100dvh - 7.5rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+
+  .hollow-halo {
+    inset: -12px -10px;
+    border-radius: 30px;
+  }
+
+  .hollow-card__body {
+    padding: 1.25rem 1.25rem 1.4rem;
+  }
+
+  .galaxy-edge-nav {
+    display: none;
+  }
+
+  .mobile-orbit-dock {
+    position: fixed;
+    left: 50%;
+    bottom: max(0.85rem, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 9999px;
+    background: rgba(254, 252, 249, 0.9);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(196, 185, 176, 0.34);
+    box-shadow: 0 12px 32px rgba(72, 60, 54, 0.12);
+  }
+}
+
+/* ===== Gentle Bottom Tide Waves ===== */
+
+.tide-wave-track {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 200%;
+  height: 100%;
+  display: flex;
+  will-change: transform;
+}
+
+.tide-wave-svg {
+  width: 50%;
+  height: 100%;
+  flex-shrink: 0;
+  display: block;
+}
+
+.tide-wave-track--slow {
+  animation: tide-drift-left 34s linear infinite;
+}
+
+.tide-wave-track--mid {
+  animation: tide-drift-right 25s linear infinite;
+}
+
+.tide-wave-track--front {
+  animation: tide-drift-left 18s linear infinite;
+}
+
+@keyframes tide-drift-left {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes tide-drift-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+
+/* ===== Human-Presence Micro Details ===== */
+
+.soft-del {
+  text-decoration-thickness: 1px;
+  text-decoration-color: currentColor;
+  opacity: 0.46;
+  transition: opacity 0.35s ease;
+  cursor: default;
+}
+
+.soft-del:hover {
+  opacity: 0.88;
+}
+
+@keyframes poke-bubble-in {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.92);
+  }
+  18% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+  82% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+}
+
+.poke-bubble {
+  animation: poke-bubble-in 2.6s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+/* ===== Gentle Terminal Stream Cursor & Reveal ===== */
+
+.terminal-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.04em;
+  margin-left: 2px;
+  border-radius: 9999px;
+  vertical-align: -0.14em;
+  pointer-events: none;
+  transition: background-color 1.2s ease, box-shadow 1.2s ease;
+}
+
+.terminal-cursor--solid {
+  opacity: 0.92;
+}
+
+.terminal-cursor--blink {
+  animation: terminal-cursor-blink 1.15s ease-in-out infinite;
+}
+
+@keyframes terminal-cursor-blink {
+  0%, 100% {
+    opacity: 0.88;
+  }
+  50% {
+    opacity: 0.14;
+  }
+}
+
+.stream-reveal {
+  animation: stream-block-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes stream-block-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-sanctuary__levitate,
+  .orbit-node--active .orbit-node__ring,
+  .avatar-orbit-ring,
+  .vinyl-spin,
+  .console-pill__dot,
+  .tide-wave-track,
+  .poke-bubble,
+  .terminal-cursor--blink,
+  .stream-reveal {
+    animation: none !important;
+  }
+}
