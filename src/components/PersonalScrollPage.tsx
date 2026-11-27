@@ -119,6 +119,18 @@ export function PersonalScrollPage() {
 
   // Prevents scroll-spy from fighting programmatic smooth scroll after clicking a chapter
   const scrollLockUntilRef = useRef<number>(0);
+  // Tracks whether the user manually skipped typing (skip = instant reveal, natural finish = 1-beat pause)
+  const manualSkipRef = useRef(false);
+
+  const triggerSkipToEnd = () => {
+    manualSkipRef.current = true;
+    stream.skipToEnd();
+  };
+
+  const triggerReplay = () => {
+    manualSkipRef.current = false;
+    stream.replay();
+  };
 
   useEffect(() => {
     return () => {
@@ -144,6 +156,7 @@ export function PersonalScrollPage() {
     if (stream.isDone) return;
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter" || e.key === "Escape") {
+        manualSkipRef.current = true;
         stream.skipToEnd();
       }
     };
@@ -161,6 +174,7 @@ export function PersonalScrollPage() {
       return;
     }
     if (!stream.isDone) {
+      manualSkipRef.current = true;
       stream.skipToEnd();
     }
     window.requestAnimationFrame(() => {
@@ -207,7 +221,7 @@ export function PersonalScrollPage() {
     const ch = CHAPTERS[idx];
     scrollLockUntilRef.current = performance.now() + 800;
     if (idx > 0 && !stream.isDone) {
-      stream.skipToEnd();
+      triggerSkipToEnd();
     }
     setActiveIdx(idx);
     if (pathname !== ch.path) {
@@ -248,7 +262,7 @@ export function PersonalScrollPage() {
     const target = e.target as HTMLElement | null;
     if (target?.closest("a, button, nav")) return;
     if (window.getSelection()?.toString()) return;
-    stream.skipToEnd();
+    triggerSkipToEnd();
   };
 
   const activeTheme = DEMO_THEMES[CHAPTERS[activeIdx].themeIdx];
@@ -398,7 +412,7 @@ export function PersonalScrollPage() {
               {SITE_CONFIG.profile.command && stream.hasReached("profile.command") && (
                 <button
                   type="button"
-                  onClick={() => (stream.isDone ? stream.replay() : stream.skipToEnd())}
+                  onClick={() => (stream.isDone ? triggerReplay() : triggerSkipToEnd())}
                   className="w-fit border-0 bg-transparent p-0 font-mono text-xs text-left cursor-pointer"
                   style={{ color: accentInk, transition: "color 1.4s ease" }}
                 >
@@ -485,9 +499,13 @@ export function PersonalScrollPage() {
             )}
         </section>
 
-        {/* === 02–06 · 设备 / 技能 / 作品 / 游玩 / 联系 (Reveal gently right after About finishes typing) === */}
+        {/* === 02–06 · 设备 / 技能 / 作品 / 游玩 / 联系 (Pause a gentle beat after natural typing before revealing) === */}
         {stream.isDone && (
-          <div className="space-y-18 sm:space-y-20 stream-reveal">
+          <div
+            className={`space-y-18 sm:space-y-20 stream-reveal ${
+              manualSkipRef.current ? "" : "stream-reveal--delayed"
+            }`}
+          >
         {/* === 02 · 设备 === */}
         <section id="devices" className="scroll-mt-24 space-y-6">
           <div className="space-y-2">

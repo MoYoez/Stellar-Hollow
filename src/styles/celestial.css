@@ -723,13 +723,17 @@
 }
 
 .stream-reveal {
-  animation: stream-block-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: stream-block-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.stream-reveal--delayed {
+  animation-delay: 0.45s;
 }
 
 @keyframes stream-block-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
