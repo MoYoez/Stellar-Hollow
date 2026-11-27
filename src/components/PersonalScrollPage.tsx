@@ -1004,43 +1004,51 @@ export function PersonalScrollPage() {
           </div>
 
           {SITE_CONFIG.social.links.length > 0 && (
-            <ul className="m-0 p-0 list-none flex flex-wrap gap-x-7 gap-y-3">
+            <ul className="m-0 p-0 list-none grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1">
               {SITE_CONFIG.social.links.map((item) => {
                 const Icon = SOCIAL_ICONS[item.id];
                 const copied = copiedId === item.id;
 
                 const content = (
                   <>
-                    <Icon size={15} style={{ color: socialColor }} />
-                    <span className="text-sm font-medium" style={{ color: headingText }}>
-                      {item.label}
+                    <span className="inline-flex items-center gap-2.5 shrink-0">
+                      <Icon size={15} style={{ color: socialColor }} />
+                      <span className="text-sm font-medium" style={{ color: headingText }}>
+                        {item.label}
+                      </span>
                     </span>
-                    <span className="font-mono text-xs" style={{ color: mutedText }}>
-                      {item.handle}
-                    </span>
-                    {item.copyText ? (
-                      copied ? (
-                        <Check size={12} style={{ color: socialColor }} />
+                    <span className="inline-flex items-center gap-2 min-w-0">
+                      <span className="font-mono text-xs truncate" style={{ color: mutedText }}>
+                        {item.handle}
+                      </span>
+                      {item.copyText ? (
+                        copied ? (
+                          <Check size={12} style={{ color: socialColor }} className="shrink-0" />
+                        ) : (
+                          <Copy
+                            size={11}
+                            style={{ color: socialColor }}
+                            className="shrink-0 opacity-55"
+                          />
+                        )
                       ) : (
-                        <Copy size={11} style={{ color: socialColor }} className="opacity-55" />
-                      )
-                    ) : (
-                      <ExternalLink
-                        size={11}
-                        style={{ color: socialColor }}
-                        className="opacity-45 group-hover:opacity-100 transition-opacity"
-                      />
-                    )}
+                        <ExternalLink
+                          size={11}
+                          style={{ color: socialColor }}
+                          className="shrink-0 opacity-45 group-hover:opacity-100 transition-opacity"
+                        />
+                      )}
+                    </span>
                   </>
                 );
 
                 if (item.copyText) {
                   return (
-                    <li key={item.id}>
+                    <li key={item.id} style={{ borderBottom: `1px solid ${hairline}` }}>
                       <button
                         type="button"
                         onClick={() => handleCopy(item.id, item.copyText!)}
-                        className="group border-0 bg-transparent p-0 py-1 inline-flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-80"
+                        className="group w-full border-0 bg-transparent px-0 py-2.5 flex items-center justify-between gap-3 cursor-pointer transition-opacity hover:opacity-80"
                       >
                         {content}
                       </button>
@@ -1049,12 +1057,12 @@ export function PersonalScrollPage() {
                 }
 
                 return (
-                  <li key={item.id}>
+                  <li key={item.id} style={{ borderBottom: `1px solid ${hairline}` }}>
                     <a
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group py-1 inline-flex items-center gap-2 no-underline transition-opacity hover:opacity-80"
+                      className="group w-full py-2.5 flex items-center justify-between gap-3 no-underline transition-opacity hover:opacity-80"
                     >
                       {content}
                     </a>
